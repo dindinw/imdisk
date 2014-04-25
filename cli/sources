@@ -1,0 +1,38 @@
+!IF "$(_BUILDARCH)" == "x86"
+ARCHDIR=i386
+!ELSEIF "$(_BUILDARCH)" == "AMD64"
+ARCHDIR=amd64
+!ELSEIF "$(_BUILDARCH)" == "IA64"
+ARCHDIR=ia64
+!ENDIF
+
+TARGETNAME=imdisk
+TARGETPATH=.
+TARGETTYPE=PROGRAM
+SOURCES=imdisk.c imdisk.rc
+UMTYPE=console
+MSC_WARNING_LEVEL=/W4 /WX /wd4201
+USE_MSVCRT=1
+MSC_OPTIMIZATION=/Ox /GF
+C_DEFINES = $(C_DEFINES) /DUNICODE /D_UNICODE
+
+!IF "$(_BUILDARCH)" == "x86"
+
+_NT_TARGET_VERSION=0x500
+LINKER_FLAGS=/osversion:4.00 /LARGEADDRESSAWARE
+UMENTRYABS=wmainCRTStartup /subsystem:console,4.00
+BUFFER_OVERFLOW_CHECKS=0
+
+!ELSE
+
+UMENTRY=wmain
+
+!ENDIF
+
+TARGETLIBS=$(SDK_LIB_PATH)\kernel32.lib \
+           $(SDK_LIB_PATH)\wsock32.lib \
+           $(SDK_LIB_PATH)\advapi32.lib \
+           $(SDK_LIB_PATH)\user32.lib \
+           $(SDK_LIB_PATH)\shell32.lib \
+           $(SDK_LIB_PATH)\ntdll.lib \
+           ..\cpl\$(ARCHDIR)\imdisk.lib

@@ -1,0 +1,31 @@
+TARGETNAME=deviotst
+TARGETPATH=.
+TARGETTYPE=PROGRAM
+SOURCES=deviotst.cpp
+
+MSC_WARNING_LEVEL=/W4 /WX /wd4201
+
+UMTYPE=console
+
+USE_MSVCRT=1
+
+C_DEFINES = $(C_DEFINES) /DUNICODE /D_UNICODE
+
+!IF "$(_BUILDARCH)" == "x86"
+
+LINKER_FLAGS=/osversion:4.00
+UMENTRYABS=wmainCRTStartup /subsystem:console,4.00
+MSC_OPTIMIZATION=/Ox /GF
+BUFFER_OVERFLOW_CHECKS=0
+
+!ELSE
+
+UMENTRYABS=wmainCRTStartup /subsystem:console
+MSC_OPTIMIZATION=/Ox /GF
+
+!ENDIF
+
+TARGETLIBS=$(SDK_LIB_PATH)\kernel32.lib \
+           $(SDK_LIB_PATH)\user32.lib \
+           $(SDK_LIB_PATH)\shell32.lib \
+           $(SDK_LIB_PATH)\wsock32.lib
